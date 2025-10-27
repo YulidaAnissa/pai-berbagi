@@ -1,7 +1,6 @@
 #root {
   width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -16,6 +15,13 @@
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@font-face {
+  font-family: Bungee;
+  font-weight: 400;
+  src: url(/fonts/Bungee) format("ttf");
+  font-display: swap;
 }
 
 @keyframes logo-spin {

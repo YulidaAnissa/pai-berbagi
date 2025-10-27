@@ -1,10 +1,14 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary: 26 115 232;
+  --color-beige: 245 245 220;
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
