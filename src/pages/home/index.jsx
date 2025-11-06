@@ -1,20 +1,33 @@
-import { useEffect, useState } from 'react'
-// import Button from '../../components/elements/Button';
 import { CardJenjang, Button, CardModul } from '../../components/elements';
+import { useNavigate  } from 'react-router-dom';
+import { useJenjang, useModul } from '../../hooks/useData';
 
 function App() {
-  const [data, setData] = useState(null)
-  const loadJenjang = async () => {
-    const response = await fetch('http://localhost:3211/jenjang');
-    const data = await response.json();
-    setData(data);
+  const navigate = useNavigate();
+  const { data: data, isLoading: isLoadingJenjang } = useJenjang();
+
+  const { data: modul, isLoading: isLoadingModul } = useModul({ sort: 'desc', limit: 4 });
+
+  const handleClickModul = (id) => {
+    if (!id) {
+      navigate('/list-modul');
+      return;
+    }
+    navigate(`/list-modul?jenjang=${id}`);
   }
 
-  useEffect(() => {
-    loadJenjang();
-  }, [])
-
-  console.log(data);
+  const renderLoading = (type) => 
+  [...Array(4)].map((_, i) => (
+    <div key={i} className="animate-pulse bg-white p-4 rounded shadow">
+      <div className="h-32 bg-gray-200 rounded mb-4"></div>
+      {type === "modul" ? (
+        <>
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </>
+      ) : null}
+    </div>
+  ));
 
   return (
     <>
@@ -22,28 +35,29 @@ function App() {
         <img
           src="/assets/banner.svg"
           alt="Banner"
-          className="w-full h-auto"
+          className="w-full h-auto rounded-lg"
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex items-center justify-start p-4 z-10">
+        <div className="absolute inset-0 bg-black/40 rounded-lg" />
+        <div className="absolute inset-0 flex items-center justify-start p-8 z-10 rounded-lg">
           <div className="text-white font-semibold text-left">
             <p className="text-2xl md:text-6xl font-bungee">Ayo PAI Berbagi!</p>
             <p className="text-md md:text-xl">Guru PAI Bersama Membangun Akhlak Bangsa</p>
+            <div className="flex flex-col md:flex-row mt-4 gap-3">
+              <Button 
+                onClick={() => navigate('/contribute')}
+              >
+                Kontribusi Modul Ajar
+              </Button>
+              <Button
+                onClick={() => navigate('/list-modul')}
+                variant="ghost"
+              >
+                Jelajahi Modul Ajar
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-
-
-
-      {/* <div className="relative overflow-hidden grid md:flex gap-4 px-4 md:px-0 lg:max-w-screen-lg mx-auto my-12">
-        {/* <Button className="w-fit" color="primary">Ayo Berbagi</Button>
-        <Button className="w-fit" variant="ghost">Lihat Referensi</Button> */}
-        
-        {/* <div className="absolute inset-0 bg-black/40" />
-        <div className="text-left relative z-10 text-white font-semibold text-md md:text-xl p-4">
-          <p>{data?.jenjang}</p>
-          <p>{data?.count}+ Koleksi</p>
-        </div> */}
 
       <div className="gap-6">
         <div className="grid gap-4 md:gap-y-6 lg:max-w-screen-lg mx-auto my-12 px-4 md:px-0">
@@ -54,11 +68,13 @@ function App() {
             Koleksi Modul Ajar berkualitas untuk melengkapi Kegiatan Belajar Mengajar Anda
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {data?.map((item, keys) => (
-              <CardJenjang key={keys} data={item} />
+            {isLoadingJenjang ? 
+              renderLoading()
+            : data?.map((item, keys) => (
+              <CardJenjang key={keys} data={item} onClick={handleClickModul}/>
             ))}
           </div>
-          <Button className="w-fit mx-auto" color="primary">Lihat Semua</Button>
+          <Button className="w-fit mx-auto" color="primary" onClick={() => handleClickModul(null)}>Lihat Semua</Button>
         </div>
         <div className="bg-[#f3f3d3]">
           <div className="grid gap-4 md:gap-y-6 lg:max-w-screen-lg mx-auto my-12 py-16 px-4 md:px-0">
@@ -66,14 +82,18 @@ function App() {
               <p className="text-2xl md:text-4xl font-bold text-left">
                 Modul Ajar
               </p>
-              <p className="text-md md:text-lg text-left my-auto cursor-pointer hover:text-primary">
+              <p className="text-md md:text-lg text-left my-auto cursor-pointer hover:text-primary" onClick={() => navigate(`/list-modul?sort=desc`)}>
                 Lihat Semua
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {data?.map((item, keys) => (
-                <CardModul key={keys} data={item} />
-              ))}
+              {isLoadingModul ? 
+                renderLoading("modul")
+              : 
+                modul?.data?.map((item, keys) => (
+                  <CardModul key={keys} data={item} />
+                ))
+              }
             </div>
           </div>
         </div>

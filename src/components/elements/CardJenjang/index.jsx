@@ -1,11 +1,10 @@
 
 export function Component({
-  data
+  data, onClick
 }) {
 
-
   return (
-    <div className="relative rounded-lg overflow-hidden shadow-lg h-28 md:h-40 hover:scale-105 cursor-pointer">
+    <div className="relative rounded-lg overflow-hidden shadow-lg h-28 md:h-40 hover:scale-105 cursor-pointer" onClick={() => onClick(data.idJenjang)}>
       <div 
         className="absolute inset-0 bg-cover bg-center p-4"
         style={{ backgroundImage: `url(${data.images})` }}
