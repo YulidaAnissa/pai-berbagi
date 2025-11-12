@@ -60,7 +60,7 @@ export function Component({ modul, onClose }) {
         >
           &times;
         </p>
-        <div className="overflow-y-auto max-h-[80vh] my-6">
+        <div className="md:overflow-y-auto max-h-[80vh] my-6">
           <div className="flex flex-col md:flex-row pr-2">
           {/* <div className="overflow-y-auto flex flex-col md:flex-row items-start md:items-stretch w-full my-5"> */}
             {/* Kolom Kiri */}
