@@ -1,6 +1,8 @@
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
 export function Breadcrumb({
+  className,
   items = [
     { link: '/', label: 'Beranda' },
   ],
@@ -14,26 +16,26 @@ export function Breadcrumb({
 
   const createArrow = (key) => {
     if (items.length - 1 !== key) {
-      return <p className="px-2 text-gray-700">{devider}</p>;
+      return <p className="px-2 ">{devider}</p>;
     }
   };
 
   const customRoot = items?.[0]?.root;
 
   return (
-    <div className="flex text-sm md:text-base">
+    <div className={clsx(className, "flex text-sm md:text-base")}>
       {!customRoot && (
         <div className="flex">
           <Link className="capitalize font-medium cursor-pointer text-primary" to={linkHome}>
             {getLabeHome()}
           </Link>
-          <p className="px-2 text-gray-700">{devider}</p>
+          <p className="px-2 ">{devider}</p>
         </div>
       )}
       {items.map((item, keys) => (
         <div className="flex" key={keys}>
           {item.link === '' ? (
-            <p className="font-medium text-gray-800">{item.label}</p>
+            <p className="font-medium ">{item.label}</p>
           ) : (
             <Link className="capitalize font-medium cursor-pointer text-primary" to={item.link}>
               {item.label}

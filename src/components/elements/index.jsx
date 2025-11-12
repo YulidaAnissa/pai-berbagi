@@ -10,3 +10,4 @@ export { default as FilterRadio } from './FilterRadio';
 export { default as LoadingRadio } from './LoadingRadio';
 export { default as SuccessModal } from './SuccessModal';
 export { default as ModalDetailModul } from './ModalDetailModul';
+export { default as ModalLoading } from './ModalLoading'

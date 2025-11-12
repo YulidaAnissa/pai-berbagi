@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useJenjang, usePostModul } from '../../hooks/useData';
-import { SuccessModal } from '../../components/elements';
+import { LoadingModul, ModalDetailModul, ModalLoading, SuccessModal } from '../../components/elements';
 import { useNavigate } from 'react-router-dom';
 
 export default function ContributeForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [fileName, setFileName] = useState('');
   const [previewURL, setPreviewURL] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showModul, setShowModul] = useState(false);
   const navigate = useNavigate();
 
   const { data: jenjangList } = useJenjang();
 
   const { postModul, isLoading, responseData } = usePostModul();
+  console.log('isLoading ', isLoading);
+  console.log('responseData ', responseData);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -27,6 +30,10 @@ export default function ContributeForm() {
 
     if (result) {
       setShowModal(true);
+      reset(); // reset semua input form
+      setFileName('');
+      setPreviewURL(null);
+
     } else {
       alert('Gagal mengirim modul.');
     }
@@ -46,16 +53,13 @@ export default function ContributeForm() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    if (responseData?.idModul) {
-      navigate(`/modul/${responseData.idModul}`);
-    }
-
+    setShowModul(true);
   }
 
   console.log('responeData', responseData);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-blue-200 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 relative overflow-hidden">
       {/* Background */}
       {showModal && <SuccessModal onClose={handleCloseModal}/>}
       <div className="absolute inset-0 z-0">
@@ -65,6 +69,10 @@ export default function ContributeForm() {
           className="w-full h-full object-cover opacity-20 blur-sm"
         />
       </div>
+      {isLoading && <ModalLoading/>}
+      {showModul && <ModalDetailModul modul={responseData?.data} onClose={() => setShowModul(false)}/>}
+
+
 
       {/* Form */}
       <div className="relative z-10 w-full max-w-2xl bg-white/80 backdrop-blur-lg rounded-xl shadow-xl p-10 border border-white/30">
@@ -155,6 +163,15 @@ export default function ContributeForm() {
             🚀 Simpan Modul Ajar
           </button>
         </form>
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="mt-6 w-full bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-200"
+        >
+          ← Kembali ke Halaman Sebelumnya
+        </button>
+
+
       </div>
     </div>
   );

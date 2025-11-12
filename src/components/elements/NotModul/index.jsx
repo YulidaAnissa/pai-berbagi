@@ -1,5 +1,5 @@
 import clsx from "clsx";
-export function Component({ className = '' }) {
+export function Component({ className = '', children = '' }) {
 
   return (
     <div className={clsx(className, "flex flex-col items-center justify-center text-center py-12 text-gray-500 animate-fade-in")}>
@@ -17,7 +17,7 @@ export function Component({ className = '' }) {
         />
       </svg>
       <p className="text-lg font-semibold">Tidak ada modul ditemukan</p>
-      <p className="text-sm mt-1">Coba ubah pencarian atau pilih jenjang lain</p>
+      <p className="text-sm mt-1">{children}</p>
     </div>
   );
 }

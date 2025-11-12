@@ -7,12 +7,14 @@ import InputSearch from '../../components/forms/InputSearch';
 import { useSearchParams } from 'react-router-dom';
 import { SORTING } from '../../constants';
 import { useJenjang, useModul } from '../../hooks/useData';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [search, setSearch] = useState(null);
   const [selectedJenjang, setSelectedJenjang] = useState(null);
   const [selectedSort, setSelectedSort] = useState('asc');
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const { data, isLoading } = useJenjang();
   
@@ -21,8 +23,6 @@ function App() {
     search: search ?? '',
     sort: selectedSort ?? ''
   });
-
-  console.log('selectedJenjang', selectedJenjang);
 
   const isMobile = mobileCheck();
 
@@ -133,32 +133,31 @@ function App() {
 
   return (
     <>
-      <div className="bg-[#f3f3d3] m-h-[180px] md:min-h-[280px] py-8 px-4 md:py-12 md:px-8">
-        <div className="lg:max-w-screen-lg mx-auto text-left grid gap-4">
-          <Breadcrumb items={breadcrumbitems} />
-          <div className="flex gap-2 items-center pt-2 md:pt-4">
-            <p className="text-lg md:text-2xl capitalize font-bold text-primary">203.454</p>
-            <p className="text-base md:text-xl">Modul Ajar</p>
-          </div>
-          <p className="md:text-base text-sm">Temukan perpustakaan template Modul Ajar</p>
-          <InputSearch
-            classButton="w-fit"
-            className="bg-white md:h-12 h-8"
-            placeholder="Cari Modul Ajar"
-            data-testid={`search-input-id`}
-            onSearch={handleSearch}
-            onChange={(e) => setSearch(e.target.value)}
-            size="small" 
-            value={search ?? ''} 
-          />
-        </div>
+     <div
+      className="bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 bg-cover bg-center min-h-[180px] md:min-h-[200px] py-8 px-4 md:py-12 md:px-8"
+    >
+      <div className="lg:max-w-screen-lg mx-auto text-left grid gap-4 p-4 rounded">
+        <Breadcrumb className="text-white" items={breadcrumbitems} />
+        <p className="text-white md:text-base text-sm font-semibold">Temukan perpustakaan template Modul Ajar</p>
+        <InputSearch
+          classButton="w-fit"
+          className="bg-white md:h-12 h-8"
+          placeholder="Cari Modul Ajar"
+          data-testid={`search-input-id`}
+          onSearch={handleSearch}
+          onChange={(e) => setSearch(e.target.value)}
+          size="small"
+          value={search ?? ''}
+        />
       </div>
-      <div className="grid grid-cols-5 md:grid-cols-7 lg:max-w-screen-lg mx-auto mt-6">
+    </div>
+
+      <div className="grid grid-cols-5 md:grid-cols-7 lg:max-w-screen-lg mx-auto mt-6 px-4 md:px-0">
         {renderFilter()}
         <div className="col-span-5 ">
           {search && <Tag label={search} onRemove={() => setSearch(null)} />}
           {!isLoadingModul && modul?.count > 0 && (
-            <p className="pl-2 text-xs text-left">
+            <p className="pl-2 text-xs text-left mb-2">
               Menampilkan {modul.count} Modul
             </p>
           )}
@@ -166,13 +165,22 @@ function App() {
             {isLoadingModul ? (
               <LoadingModul />
             ) : modul && modul.count > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {modul?.data?.map((item, keys) => (
                   <CardModul key={keys} data={item} />
                 ))}
               </div>
             ) : (
-              <NotModul />
+              <NotModul>
+                <p className="text-sm">Coba ubah pencarian atau pilih jenjang lain</p>
+                <p className="text-sm mb-4">atau mulai kontribusi Anda untuk pendidikan yang lebih baik</p>
+                <Button
+                  onClick={() => navigate('/contribute')}
+                  className="mx-auto text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                >
+                  ✍️ Kontribusi Sekarang
+                </Button>
+              </NotModul>
             )}
           </div>
         </div>
