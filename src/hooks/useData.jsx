@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 
-const BASE_URL = 'http://localhost:3211';
+const BASE_URL = 'https://pai-berbagi-services.up.railway.app';
 
 export function useJenjang() {
   const [data, setData] = useState([]);
