@@ -53,7 +53,7 @@ function App() {
         </div>
         <div>
           <img
-          src="https://res.cloudinary.com/dafq0pw8w/image/upload/v1763367016/Edit_the_image_of_fi_oycjwd.png" // Ganti dengan gambar relevan dari hasil pencarian
+          src="https://res.cloudinary.com/dafq0pw8w/image/upload/v1762851096/banner_lxxcaj.png" // Ganti dengan gambar relevan dari hasil pencarian
           alt="Guru PAI Berbagi"
           className="absolute -mt-36 md:-mt-20 opacity-65 md:opacity-85"
           // className="absolute inset-0 w-full h-full object-cover opacity-30 z-0"
