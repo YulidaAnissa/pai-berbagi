@@ -94,7 +94,7 @@ export default function ContributeForm() {
 
           {/* Penulis */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nama Penulis</label>
+            <label className="block text-sm font-medium text-gray-700">Nama Penulis/Dipublikasikan oleh</label>
             <input
               {...register('name', { required: 'Nama penulis wajib diisi' })}
               className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
