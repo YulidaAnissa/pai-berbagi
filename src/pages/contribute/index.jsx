@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useJenjang, usePostModul } from '../../hooks/useData';
+import { useJenjang, usePostModul, useCategories } from '../../hooks/useData';
 import { LoadingModul, ModalDetailModul, ModalLoading, SuccessModal } from '../../components/elements';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,13 +10,13 @@ export default function ContributeForm() {
   const [previewURL, setPreviewURL] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModul, setShowModul] = useState(false);
+  const [kategori, setKategori] = useState('ebook'); // default kategori
   const navigate = useNavigate();
 
   const { data: jenjangList } = useJenjang();
 
   const { postModul, isLoading, responseData } = usePostModul();
-  console.log('isLoading ', isLoading);
-  console.log('responseData ', responseData);
+  const { data: categories } = useCategories();
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -24,7 +24,13 @@ export default function ContributeForm() {
     formData.append('title', data.title);
     formData.append('desc', data.desc);
     formData.append('name', data.name);
+    formData.append('idKategori', kategori);
+
+    if (kategori === 3) {
     formData.append('file', data.file[0]);
+    } else {
+      formData.append('link', data.link);
+    }
 
     const result = await postModul(formData);
 
@@ -38,7 +44,6 @@ export default function ContributeForm() {
       alert('Gagal mengirim modul.');
     }
   };
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -55,8 +60,6 @@ export default function ContributeForm() {
     setShowModal(false);
     setShowModul(true);
   }
-
-  console.log('responeData', responseData);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 relative overflow-hidden">
@@ -127,31 +130,64 @@ export default function ContributeForm() {
             />
           </div>
 
-          {/* File Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Unggah File (PDF saja)</label>
-            <input
-              type="file"
-              accept="application/pdf"
-              {...register('file', {
-                required: 'File wajib diunggah',
-                validate: {
-                  isPdf: (value) =>
-                    value[0]?.type === 'application/pdf' || 'File harus berformat PDF',
-                },
-              })}
-              onChange={handleFileChange}
-              className="mt-2 w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200"
-            />
-            {fileName && <p className="text-sm text-gray-600 mt-1">📎 {fileName}</p>}
-            {errors.file && <p className="text-red-500 text-sm mt-1">{errors.file.message}</p>}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Kategori Modul</label>
+            <div className="grid grid-cols-3 gap-4">
+              {categories?.map((tab) => (
+                <button
+                  key={tab.idKategori}
+                  type="button"
+                  onClick={() => setKategori(tab.idKategori)}
+                  className={`px-4 py-2 rounded-lg font-medium transition 
+                    ${kategori === tab.idKategori 
+                      ? "bg-indigo-600 text-white shadow-md" 
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
+                >
+                  <img src={tab.icon} alt="Modul Interaktif Icon" className="w-10 h-10 mx-auto mb-4 object-contain" />
+                  {tab.kategori}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Preview */}
-          {previewURL && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-600 mb-1">📷 Pratinjau:</p>
-              <iframe src={previewURL} className="w-full h-80 border rounded-md" title="Preview PDF" />
+          {/* Conditional Input */}
+          {kategori === 3 ? (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Unggah File (PDF saja)</label>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  {...register('file', {
+                    required: 'File wajib diunggah',
+                    validate: {
+                      isPdf: (value) =>
+                        value[0]?.type === 'application/pdf' || 'File harus berformat PDF',
+                    },
+                  })}
+                  onChange={handleFileChange}
+                  className="mt-2 w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200"
+                />
+                {fileName && <p className="text-sm text-gray-600 mt-1">📎 {fileName}</p>}
+                {errors.file && <p className="text-red-500 text-sm mt-1">{errors.file.message}</p>}
+              </div>
+              {/* Preview */}
+              {previewURL && (
+                <div className="mt-4">
+                  <p className="text-sm text-gray-600 mb-1">📷 Pratinjau:</p>
+                  <iframe src={previewURL} className="w-full h-80 border rounded-md" title="Preview PDF" />
+                </div>
+              )}
+            </>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Unggah Link</label>
+              <input
+                type="url"
+                {...register('link', { required: 'Link wajib diisi' })}
+                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+              />
+              {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link.message}</p>}
             </div>
           )}
 

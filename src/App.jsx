@@ -2,7 +2,7 @@ import './App.css'
 import Home from './pages/home';
 import ListModul from './pages/list-modul';
 import Contribute from './pages/contribute';
-import DetailPage from './pages/detail-modul';
+import DetailPage from './pages/modul';
 import { Route, Routes } from 'react-router-dom';
 
 function App() {

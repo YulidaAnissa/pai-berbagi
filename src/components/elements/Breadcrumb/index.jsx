@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 export function Breadcrumb({
   className,
   items = [
-    { link: '/', label: 'Beranda' },
+    { link: '/', label: '🏠 Home' },
   ],
   linkHome = '/',
-  labelHome = 'Beranda',
-  devider = '>' }) {
+  labelHome = '🏠 Home',
+  devider = '/' }) {
   
   const getLabeHome = () => {
     return labelHome?.split('-').join(' ');
@@ -23,7 +23,7 @@ export function Breadcrumb({
   const customRoot = items?.[0]?.root;
 
   return (
-    <div className={clsx(className, "flex text-sm md:text-base")}>
+    <div className={clsx(className, "flex text-sm")}>
       {!customRoot && (
         <div className="flex">
           <Link className="capitalize font-medium cursor-pointer text-primary" to={linkHome}>

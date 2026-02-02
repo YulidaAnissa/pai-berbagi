@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 
-const BASE_URL = 'https://pai-berbagi-services.up.railway.app';
+const BASE_URL = 'http://localhost:3211';
 
 export function useJenjang() {
   const [data, setData] = useState([]);
@@ -27,15 +27,40 @@ export function useJenjang() {
   return { data, isLoading };
 }
 
+export function useCategories() {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export function useModul({ id, search, sort, limit } = {}) {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${BASE_URL}/kategori`);
+        const result = await response.json();
+        setData(result || []);
+      } catch (error) {
+        console.error('Gagal memuat kategori:', error);
+        setData([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  return { data, isLoading };
+}
+
+
+export function useModul({ id, search, sort, limit, kategori } = {}) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Membuat queryParams stabil dan bisa dilacak oleh ESLint
   const queryParams = useMemo(() => {
-    return { id, search, sort, limit };
-  }, [id, search, sort, limit]);
+    return { id, search, sort, limit, kategori };
+  }, [id, search, sort, limit, kategori]);
 
   useEffect(() => {
     const fetchModul = async () => {

@@ -1,8 +1,6 @@
 import { LoadingRadio } from "../index";
 
 export function Component({ title, queryKey, selected, setSelected, data, isLoading, updateSearchParams, valueKey = "id", labelKey = "label" }) {
-
-  console.log({selected});
   return (
     <div className="grid gap-2 mt-4 w-4/5">
       <p>{title}</p>

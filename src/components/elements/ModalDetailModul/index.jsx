@@ -42,7 +42,7 @@ export function Component({ modul, onClose }) {
       icon: <FaCalendarPlus size={20} />,
     },
   ];
-
+  
   const shortDesc = modul?.desc?.slice(0, 200); // batas karakter pendek
 
   return (
@@ -51,7 +51,7 @@ export function Component({ modul, onClose }) {
       onClick={onClose}
     >
       <div
-        className="relative animate-fade-in bg-white text-black border border-white/30 rounded-xl shadow-lg max-w-2xl w-full p-2 md:p-6 max-h-[90vh] mx-3"
+        className="relative animate-fade-in bg-white text-black border border-white/30 rounded-xl shadow-lg max-w-5xl w-full p-2 md:p-6 max-h-[90vh] mx-3"
         onClick={(e) => e.stopPropagation()}
       >
         <p
@@ -121,13 +121,38 @@ export function Component({ modul, onClose }) {
               </p>
             </div>
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <h3 className="font-semibold text-gray-800 mb-2">Pratinjau File:</h3>
             <iframe
               src={modul?.files}
               title="Pratinjau File"
               className="w-full h-64 border rounded"
             />
+          </div> */}
+           <div className="flex w-full mt-8 justify-center">
+            <div style={{ position: 'relative', paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
+              {/* <iframe width="853" height="480" 
+                src="https://www.youtube.com/embed/jtuBSL5yQdM" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen/> */}
+
+            </div>
+            <div style={{ width: '100%' }}>
+              <div style={{ position: 'relative', paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
+                <iframe 
+                  title={modul?.title}
+                  frameborder="0"
+                  width="1200px"
+                  height="675px"
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                  src={modul?.files}
+                  type="text/html" allowscriptaccess="always" allowfullscreen="true"
+                  scrolling="yes" allownetworking="all"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

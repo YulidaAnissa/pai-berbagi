@@ -4,13 +4,16 @@ export function Component({
 }) {
 
   return (
-    <div className="relative rounded-lg overflow-hidden shadow-lg h-28 md:h-40 hover:scale-105 cursor-pointer" onClick={() => onClick(data.idJenjang)}>
+    <div 
+      className="relative z-10 bg-white/30 backdrop-blur-md rounded-2xl shadow-lg max-w-md h-32 md:h-48 hover:scale-105 cursor-pointer" 
+      onClick={() => onClick("jenjang", data.idJenjang)}
+    >
       <div 
-        className="absolute inset-0 bg-cover bg-center p-4"
-        style={{ backgroundImage: `url(${data.images})` }}
+        className="absolute inset-0 bg-cover bg-center p-4 rounded-2xl shadow-lg"
+        style={{ backgroundImage: `url(${data.image})` }}
       />
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="text-left relative z-10 text-white font-semibold text-md md:text-xl p-4">
+      <div className="absolute inset-0 bg-black/40 rounded-2xl" />
+      <div className="text-left relative text-white font-semibold text-md md:text-xl p-4">
         <p>{data?.jenjang}</p>
         <p>{data?.count}+ Koleksi</p>
       </div>

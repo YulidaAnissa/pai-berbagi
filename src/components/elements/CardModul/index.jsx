@@ -4,19 +4,22 @@ import { useState } from "react";
 import { FaUser, 
   FaGraduationCap,
   FaUserAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export function Component({
   data
 }) {
   const [ modal, setModal ] = useState(false);
+  const navigate = useNavigate();
+
   const handleClick = () => {
-    setModal(true);
+    navigate(`/modul/${data.idModul}`);
   }
 
   const content = [
       {
         title: 'Tingkat Pendidikan',
-        value: data?.jenjang?.jenjang,
+        value: data?.jenjang,
         icon: <FaGraduationCap size={15} />,
       },
       {
@@ -28,14 +31,14 @@ export function Component({
 
   return (
     <div
-      className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+      className="group z-1 bg-white/30 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
     >
       <div className="hidden md:grid relative h-40 w-full overflow-hidden">
-        <img
+        {/* <img
           src={data?.jenjang?.imagesModul}
           alt={data.title}
           className="object-fill md:object-cover w-full h-full transition-transform duration-300"
-        />
+        /> */}
         <div className="absolute inset-0 flex flex-col p-5 text-white text-left">
           <p className="font-bungee tracking-wide font-semibold my-auto uppercase text-gray-800">{data.title}</p>
         </div>
