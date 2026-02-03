@@ -107,11 +107,11 @@ function App() {
               renderLoading("modul")
             ) : modul?.data?.length === 0 ? (
               <div className="col-span-full text-center py-10">
-                <NotModul className="text-white">
+                <NotModul>
                   <p className="text-sm mb-4">Yuk jadi yang pertama berbagi modul ajar untuk Guru PAI!</p>
                   <Button
                     onClick={() => navigate('/contribute')}
-                    className="mx-auto text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                    className="mx-auto font-medium py-2 px-4 rounded-lg transition duration-200"
                   >
                     ✍️ Kontribusi Sekarang
                   </Button>
