@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useJenjang, usePostModul, useCategories } from '../../hooks/useData';
-import { LoadingModul, ModalDetailModul, ModalLoading, SuccessModal } from '../../components/elements';
 import { useNavigate } from 'react-router-dom';
+import { useJenjang, usePostModul, useCategories } from '../../hooks/useData';
+import {
+  Breadcrumb,
+  ModalDetailModul,
+  ModalLoading,
+  SuccessModal,
+} from '../../components/elements';
 
 export default function ContributeForm() {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const [fileName, setFileName] = useState('');
   const [previewURL, setPreviewURL] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModul, setShowModul] = useState(false);
-  const [kategori, setKategori] = useState('ebook'); // default kategori
+  const [kategori, setKategori] = useState(3);
   const navigate = useNavigate();
 
-  const { data: jenjangList } = useJenjang();
-
+  const { data: jenjangList = [] } = useJenjang();
   const { postModul, isLoading, responseData } = usePostModul();
-  const { data: categories } = useCategories();
+  const { data: categories = [] } = useCategories();
+
+  const selectedCategory = categories.find((item) => item.idKategori === kategori);
+  const isPdfCategory = kategori === 3;
+  const breadcrumbItems = [{ link: '', label: 'Kontribusi Modul' }];
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -26,8 +39,8 @@ export default function ContributeForm() {
     formData.append('name', data.name);
     formData.append('idKategori', kategori);
 
-    if (kategori === 3) {
-    formData.append('file', data.file[0]);
+    if (isPdfCategory) {
+      formData.append('file', data.file[0]);
     } else {
       formData.append('link', data.link);
     }
@@ -36,10 +49,9 @@ export default function ContributeForm() {
 
     if (result) {
       setShowModal(true);
-      reset(); // reset semua input form
+      reset();
       setFileName('');
       setPreviewURL(null);
-
     } else {
       alert('Gagal mengirim modul.');
     }
@@ -47,114 +59,164 @@ export default function ContributeForm() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     if (file && file.type === 'application/pdf') {
       setFileName(file.name);
       setPreviewURL(URL.createObjectURL(file));
-    } else {
-      setFileName('');
-      setPreviewURL(null);
+      return;
     }
+
+    setFileName('');
+    setPreviewURL(null);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setShowModul(true);
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 relative overflow-hidden">
-      {/* Background */}
-      {showModal && <SuccessModal onClose={handleCloseModal}/>}
-      <div className="absolute inset-0 z-0">
+    <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-10 text-slate-900 sm:px-6 lg:px-8">
+      {showModal && <SuccessModal onClose={handleCloseModal} />}
+      {isLoading && <ModalLoading />}
+      {showModul && (
+        <ModalDetailModul modul={responseData?.data} onClose={() => setShowModul(false)} />
+      )}
+
+      <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1614728894745-0f2c5f3d8f4f?auto=format&fit=crop&w=1920&q=80"
-          alt="Background edukasi"
-          className="w-full h-full object-cover opacity-20 blur-sm"
+          src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1920&q=85"
+          alt="Ruang belajar"
+          className="h-full w-full object-cover opacity-35"
         />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.35),transparent_32%),linear-gradient(135deg,rgba(15,23,42,0.94),rgba(30,41,59,0.84)_48%,rgba(15,23,42,0.96))]" />
       </div>
-      {isLoading && <ModalLoading/>}
-      {showModul && <ModalDetailModul modul={responseData?.data} onClose={() => setShowModul(false)}/>}
 
+      <section className="relative z-10 mx-auto w-full max-w-6xl">
+        <Breadcrumb
+          className="mb-8 w-fit rounded-full border border-white/15 bg-white/10 px-3 py-2 text-white shadow-lg shadow-slate-950/10 backdrop-blur"
+          items={breadcrumbItems}
+          labelHome="Beranda"
+          divider=">"
+        />
 
+        <div className="grid items-start gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+          <aside className="pt-4 text-white lg:sticky lg:top-10">
+          <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-sky-100 backdrop-blur">
+            Kontribusi Modul Ajar
+          </span>
+          <h1 className="mt-6 max-w-xl text-4xl font-bold leading-tight tracking-normal sm:text-5xl">
+            Bagikan materi belajar dengan tampilan yang lebih rapi.
+          </h1>
+          <p className="mt-5 max-w-lg text-base leading-7 text-slate-200">
+            Lengkapi informasi modul, pilih kategori, lalu unggah PDF atau tautan materi agar mudah
+            ditemukan oleh pengguna lain.
+          </p>
 
-      {/* Form */}
-      <div className="relative z-10 w-full max-w-2xl bg-white/80 backdrop-blur-lg rounded-xl shadow-xl p-10 border border-white/30">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-indigo-700">📚 Ayoo Ikut Berkontribusi!</h1>
-          <p className="text-gray-600 mt-2">Tambahkan <strong>modul ajar</strong> untuk memperkaya pembelajaran bersama 💡</p>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Judul */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Judul Modul</label>
-            <input
-              {...register('title', { required: 'Judul wajib diisi' })}
-              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-            />
-            {errors.judul && <p className="text-red-500 text-sm mt-1">{errors.judul.message}</p>}
-          </div>
-
-          {/* Penulis */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Nama Penulis/Dipublikasikan oleh</label>
-            <input
-              {...register('name', { required: 'Nama penulis wajib diisi' })}
-              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-            />
-            {errors.penulis && <p className="text-red-500 text-sm mt-1">{errors.penulis.message}</p>}
-          </div>
-
-          {/* Jenjang */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
-            <select
-              {...register('idJenjang', { required: 'Jenjang wajib dipilih' })}
-              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white"
-            >
-              <option value="">-- Pilih Jenjang --</option>
-              {jenjangList.map((item) => (
-                <option key={item.idJenjang} value={item.idJenjang}>{item.jenjang}</option>
-              ))}
-            </select>
-            {errors.jenjang && <p className="text-red-500 text-sm mt-1">{errors.jenjang.message}</p>}
-          </div>
-
-          {/* Deskripsi */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Deskripsi Modul</label>
-            <textarea
-              {...register('desc')}
-              rows="4"
-              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Kategori Modul</label>
-            <div className="grid grid-cols-3 gap-4">
-              {categories?.map((tab) => (
-                <button
-                  key={tab.idKategori}
-                  type="button"
-                  onClick={() => setKategori(tab.idKategori)}
-                  className={`px-4 py-2 rounded-lg font-medium transition 
-                    ${kategori === tab.idKategori 
-                      ? "bg-indigo-600 text-white shadow-md" 
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
-                >
-                  <img src={tab.icon} alt="Modul Interaktif Icon" className="w-10 h-10 mx-auto mb-4 object-contain" />
-                  {tab.kategori}
-                </button>
-              ))}
+          <div className="mt-8 grid max-w-md gap-3 text-sm text-slate-100">
+            <div className="rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur">
+              <p className="font-semibold">Kategori aktif</p>
+              <p className="mt-1 text-slate-300">{selectedCategory?.kategori || 'Pilih kategori modul'}</p>
+            </div>
+            <div className="rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur">
+              <p className="font-semibold">Format unggahan</p>
+              <p className="mt-1 text-slate-300">
+                {isPdfCategory ? 'File PDF dengan pratinjau otomatis' : 'Tautan materi digital'}
+              </p>
             </div>
           </div>
+        </aside>
 
-          {/* Conditional Input */}
-          {kategori === 3 ? (
-            <>
+        <div className="rounded-2xl border border-white/20 bg-white/95 p-5 shadow-2xl shadow-slate-950/30 backdrop-blur-xl sm:p-8">
+          <div className="border-b border-slate-200 pb-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-700">
+              Formulir Modul
+            </p>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">Detail kontribusi</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Pastikan judul, penulis, jenjang, dan sumber materi sudah sesuai sebelum dikirim.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-7 space-y-6">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="text-sm font-semibold text-slate-700">Judul Modul</label>
+                <input
+                  {...register('title', { required: 'Judul wajib diisi' })}
+                  placeholder="Contoh: Matematika Dasar Kelas 7"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                />
+                {errors.title && <p className="mt-2 text-sm text-red-600">{errors.title.message}</p>}
+              </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Unggah File (PDF saja)</label>
+                <label className="text-sm font-semibold text-slate-700">Nama Penulis</label>
+                <input
+                  {...register('name', { required: 'Nama penulis wajib diisi' })}
+                  placeholder="Nama lengkap"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                />
+                {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-slate-700">Jenjang Pendidikan</label>
+                <select
+                  {...register('idJenjang', { required: 'Jenjang wajib dipilih' })}
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                >
+                  <option value="">Pilih jenjang</option>
+                  {jenjangList.map((item) => (
+                    <option key={item.idJenjang} value={item.idJenjang}>
+                      {item.jenjang}
+                    </option>
+                  ))}
+                </select>
+                {errors.idJenjang && (
+                  <p className="mt-2 text-sm text-red-600">{errors.idJenjang.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Deskripsi Modul</label>
+              <textarea
+                {...register('desc')}
+                rows="4"
+                placeholder="Tuliskan ringkasan singkat isi modul"
+                className="mt-2 w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Kategori Modul</label>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {categories.map((tab) => {
+                  const isActive = kategori === tab.idKategori;
+
+                  return (
+                    <button
+                      key={tab.idKategori}
+                      type="button"
+                      onClick={() => setKategori(tab.idKategori)}
+                      className={`flex min-h-28 flex-col items-center justify-center rounded-xl border px-3 py-4 text-center text-sm font-semibold transition ${
+                        isActive
+                          ? 'border-sky-500 bg-sky-50 text-sky-800 shadow-lg shadow-sky-100'
+                          : 'border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      <img src={tab.icon} alt={tab.kategori} className="mb-3 h-10 w-10 object-contain" />
+                      <span>{tab.kategori}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {isPdfCategory ? (
+              <div className="rounded-2xl border border-dashed border-sky-300 bg-sky-50/70 p-5">
+                <label className="text-sm font-semibold text-slate-700">Unggah File PDF</label>
                 <input
                   type="file"
                   accept="application/pdf"
@@ -166,49 +228,52 @@ export default function ContributeForm() {
                     },
                   })}
                   onChange={handleFileChange}
-                  className="mt-2 w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200"
+                  className="mt-3 w-full text-sm text-slate-700 file:mr-4 file:rounded-lg file:border-0 file:bg-sky-600 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white hover:file:bg-sky-700"
                 />
-                {fileName && <p className="text-sm text-gray-600 mt-1">📎 {fileName}</p>}
-                {errors.file && <p className="text-red-500 text-sm mt-1">{errors.file.message}</p>}
+                {fileName && <p className="mt-3 text-sm text-slate-600">File terpilih: {fileName}</p>}
+                {errors.file && <p className="mt-2 text-sm text-red-600">{errors.file.message}</p>}
+
+                {previewURL && (
+                  <div className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                    <div className="border-b border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700">
+                      Pratinjau PDF
+                    </div>
+                    <iframe src={previewURL} className="h-80 w-full" title="Preview PDF" />
+                  </div>
+                )}
               </div>
-              {/* Preview */}
-              {previewURL && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-1">📷 Pratinjau:</p>
-                  <iframe src={previewURL} className="w-full h-80 border rounded-md" title="Preview PDF" />
-                </div>
-              )}
-            </>
-          ) : (
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Unggah Link</label>
-              <input
-                type="url"
-                {...register('link', { required: 'Link wajib diisi' })}
-                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              />
-              {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link.message}</p>}
+            ) : (
+              <div>
+                <label className="text-sm font-semibold text-slate-700">Link Materi</label>
+                <input
+                  type="url"
+                  {...register('link', { required: 'Link wajib diisi' })}
+                  placeholder="https://contoh.com/materi"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                />
+                {errors.link && <p className="mt-2 text-sm text-red-600">{errors.link.message}</p>}
+              </div>
+            )}
+
+            <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-between">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                Kembali
+              </button>
+              <button
+                type="submit"
+                className="rounded-xl bg-sky-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-200 transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-100"
+              >
+                Simpan Modul Ajar
+              </button>
             </div>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition duration-200"
-          >
-            🚀 Simpan Modul Ajar
-          </button>
-        </form>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="mt-6 w-full bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-200"
-        >
-          ← Kembali ke Halaman Sebelumnya
-        </button>
-
-
-      </div>
-    </div>
+          </form>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

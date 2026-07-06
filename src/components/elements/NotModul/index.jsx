@@ -1,23 +1,37 @@
 import clsx from "clsx";
-export function Component({ className = '', children = '' }) {
+import { FaBook, FaFilter, FaPlus } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
+export function Component({ className = "", children = "" }) {
   return (
-    <div className={clsx(className, "flex flex-col items-center justify-center text-center py-12 text-gray-500 animate-fade-in")}>
-      <svg
-        className="w-24 h-24 mb-4 animate-bounce"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        viewBox="0 0 24 24"
-      >
-        <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9.75 9.75h4.5m-4.5 4.5h4.5M3 6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18V6z"
-        />
-      </svg>
-      <p className="text-lg font-semibold">Tidak ada modul ditemukan</p>
-      <p className="text-sm mt-1">{children}</p>
+    <div
+      className={clsx(
+        className,
+        "relative overflow-hidden rounded-xl border border-emerald-100 bg-gradient-to-br from-white via-emerald-50/40 to-amber-50/50 px-6 py-14 text-center shadow-xl shadow-emerald-950/5"
+      )}
+    >
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-amber-400 to-slate-900" />
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+        {children || "Coba sesuaikan kata kunci, ubah filter, atau lihat semua modul yang tersedia."}
+      </p>
+
+      <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+        <Link
+          to="/list-modul"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-950/10 transition hover:bg-emerald-800"
+        >
+          <FaFilter size={13} />
+          Reset pencarian
+        </Link>
+
+        <Link
+          to="/contribute"
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-200 bg-white px-5 py-3 text-sm font-bold text-amber-700 transition hover:bg-amber-50"
+        >
+          <FaPlus size={12} />
+          Kontribusi modul
+        </Link>
+      </div>
     </div>
   );
 }
