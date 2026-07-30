@@ -58,7 +58,6 @@ export function Component({ data }) {
   return (
     <article className="group relative h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm shadow-slate-950/5 transition duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-2xl hover:shadow-emerald-950/10">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-amber-400 to-slate-950 transition" />
-
       <div className="relative h-48 w-full overflow-hidden bg-slate-950">
         {coverUrl ? (
           <img

@@ -12,6 +12,7 @@ import {
   FaInfoCircle,
   FaLayerGroup,
   FaPlay,
+  FaTiktok, // <-- 1. Import icon TikTok dari react-icons/fa
   FaUserAlt,
   FaWindows,
   FaYoutube,
@@ -66,18 +67,35 @@ export default function ModulDetailPage({ modul }) {
         })
       : "-";
 
-  const getYoutubeEmbedUrl = (url) => {
-    if (!url) return null;
+  // 2. Fungsi deteksi dan konversi URL (Support YouTube & TikTok)
+  const getEmbedUrl = (url) => {
+    if (!url) return { url: null, type: null };
 
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
-    const match = url.match(regExp);
+    // Cek apakah URL YouTube
+    const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
+    const ytMatch = url.match(ytRegExp);
+    if (ytMatch && ytMatch[2].length === 11) {
+      return {
+        url: `https://www.youtube.com/embed/${ytMatch[2]}`,
+        type: "youtube",
+      };
+    }
 
-    return match && match[2].length === 11
-      ? `https://www.youtube.com/embed/${match[2]}`
-      : url;
+    // Cek apakah URL TikTok (Mengambil Video ID dari link tiktok.com/@user/video/ID)
+    const ttRegExp = /tiktok\.com\/.*\/video\/(\d+)/;
+    const ttMatch = url.match(ttRegExp);
+    if (ttMatch && ttMatch[1]) {
+      return {
+        url: `https://www.tiktok.com/player/v1/${ttMatch[1]}`,
+        type: "tiktok",
+      };
+    }
+
+    // Jika format lain (misal langsung link embed atau lainnya)
+    return { url, type: "other" };
   };
 
-  const previewUrl = getYoutubeEmbedUrl(rawPreviewUrl);
+  const { url: previewUrl, type: previewType } = getEmbedUrl(rawPreviewUrl);
 
   const breadcrumbitems = [
     { link: "/list-modul", label: "Modul Pembelajaran" },
@@ -151,7 +169,6 @@ export default function ModulDetailPage({ modul }) {
 
           <div className="mt-9 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
             <div>
-              
               <div className="mt-7 flex flex-wrap gap-3 text-xs font-bold">
                 <span className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-slate-100 backdrop-blur">
                   {kategori}
@@ -205,12 +222,23 @@ export default function ModulDetailPage({ modul }) {
                 <h2 className="text-lg font-black text-slate-950">Pratinjau Modul</h2>
                 <p className="mt-1 text-sm text-slate-500">{title}</p>
               </div>
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-red-50 text-red-600">
-                {previewUrl ? <FaYoutube size={20} /> : <FaFileAlt size={18} />}
+              {/* 3. Dinamis Icon Berdasarkan Jenis Preview URL */}
+              <div
+                className={`grid h-11 w-11 shrink-0 place-items-center rounded-lg ${
+                  previewType === "youtube"
+                    ? "bg-red-50 text-red-600"
+                    : previewType === "tiktok"
+                    ? "bg-slate-900 text-white"
+                    : "bg-emerald-50 text-emerald-600"
+                }`}
+              >
+                {previewType === "youtube" && <FaYoutube size={20} />}
+                {previewType === "tiktok" && <FaTiktok size={18} />}
+                {previewType !== "youtube" && previewType !== "tiktok" && <FaFileAlt size={18} />}
               </div>
             </div>
 
-            <div className="relative aspect-video bg-slate-950">
+            <div className="relative aspect-video bg-slate-950 flex items-center justify-center">
               {previewUrl ? (
                 <iframe
                   title={title}
@@ -218,7 +246,9 @@ export default function ModulDetailPage({ modul }) {
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  className="absolute inset-0 h-full w-full"
+                  className={`absolute inset-0 h-full w-full ${
+                    previewType === "tiktok" ? "max-w-sm mx-auto" : ""
+                  }`}
                 />
               ) : (
                 <div className="grid h-full place-items-center px-6 text-center">
