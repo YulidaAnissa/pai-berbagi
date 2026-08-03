@@ -47,129 +47,143 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#f6f7f2] text-slate-800">
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/60 bg-white/90 shadow-sm shadow-slate-900/5 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="text-left text-2xl font-black tracking-normal text-slate-950"
-          >
-            PAI Berbagi
-          </button>
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/60 bg-white/80 shadow-sm shadow-slate-950/5 backdrop-blur-xl transition-all">
+  <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+    {/* Logo dengan sentuhan ikon kecil */}
+    <button
+      type="button"
+      onClick={() => navigate("/")}
+      className="group flex items-center gap-2.5 text-left text-xl font-black tracking-tight text-slate-900"
+    >
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black shadow-md shadow-emerald-600/20 transition-transform group-hover:scale-105">
+        P
+      </span>
+      <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 bg-clip-text text-transparent">
+        PAI Berbagi
+      </span>
+    </button>
 
-          <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
-            <a className="transition hover:text-emerald-700" href="#kategori">
-              Kategori
-            </a>
-            <a className="transition hover:text-emerald-700" href="#jenjang">
-              Jenjang
-            </a>
-            <a className="transition hover:text-emerald-700" href="#modul">
-              Modul
-            </a>
-            <button
-              type="button"
-              onClick={() => navigate("/contribute")}
-              className="rounded-lg bg-slate-950 px-4 py-2.5 text-white shadow-lg shadow-slate-900/10 transition hover:bg-emerald-800"
-            >
-              Kontribusi
-            </button>
-          </div>
-        </div>
-      </nav>
-
+    {/* Menu Navigasi Tengah/Kanan */}
+    <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
+      <a className="relative py-1 transition-colors hover:text-emerald-600 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-emerald-600 after:transition-all hover:after:w-full" href="#kategori">
+        Kategori
+      </a>
+      <a className="relative py-1 transition-colors hover:text-emerald-600 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-emerald-600 after:transition-all hover:after:w-full" href="#jenjang">
+        Jenjang
+      </a>
+      <a className="relative py-1 transition-colors hover:text-emerald-600 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-emerald-600 after:transition-all hover:after:w-full" href="#modul">
+        Modul
+      </a>
+      <button
+        type="button"
+        onClick={() => navigate("/contribute")}
+        className="rounded-xl bg-slate-950 px-5 py-2.5 text-white font-semibold shadow-md shadow-slate-950/15 transition-all duration-200 hover:bg-emerald-600 hover:shadow-emerald-600/25 hover:-translate-y-0.5 active:translate-y-0"
+      >
+        Kontribusi
+      </button>
+    </div>
+  </div>
+</nav>
       <main>
-        <section className="relative min-h-[720px] overflow-hidden px-5 pb-16 pt-28 md:px-8 md:pb-20 md:pt-32">
-          <div className="absolute inset-0">
+        <section className="relative min-h-[720px] overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 px-5 pb-16 pt-28 md:px-8 md:pb-20 md:pt-32">
+          {/* Background Image & Bright Overlays */}
+          <div className="absolute inset-0 opacity-40 mix-blend-overlay">
             <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=85"
+              src="https://res.cloudinary.com/dafq0pw8w/image/upload/v1785737947/WhatsApp_Image_2026-08-03_at_12.45.41_1_y432g7.jpg"
               alt="Kegiatan belajar bersama"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover scale-105 transition-transform duration-1000 ease-out"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.95)_0%,rgba(15,23,42,0.82)_48%,rgba(15,23,42,0.42)_100%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#f6f7f2] to-transparent" />
           </div>
+          
+          {/* Bright Soft Glow Gradients */}
+          <div className="absolute top-1/4 left-10 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
+          <div className="absolute bottom-10 right-10 h-96 w-96 rounded-full bg-teal-400/20 blur-3xl pointer-events-none" />
+          
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,78,59,0.85)_0%,rgba(15,118,110,0.75)_50%,rgba(15,23,42,0.6)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#f6f7f2] via-[#f6f7f2]/80 to-transparent" />
 
-          <div className="relative mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            {/* Left Column: Hero Text */}
             <div className="max-w-3xl pb-4 text-white">
-              <p className="mb-5 inline-flex rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-emerald-50 backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-400/20 px-4 py-1.5 text-xs font-semibold text-emerald-100 backdrop-blur-md shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
                 Ruang berbagi modul Guru PAI
-              </p>
+              </div>
 
-              <h1 className="max-w-4xl text-4xl font-black leading-tight tracking-normal md:text-6xl">
-                Platform modul PAI yang rapi, hangat, dan siap dipakai.
+              <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.15] tracking-tight md:text-6xl text-white">
+                Platform modul PAI yang <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-teal-100 to-cyan-200">rapi, hangat,</span> dan siap dipakai.
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-8 text-slate-200 md:text-lg">
-                Temukan modul pembelajaran PAI berdasarkan kategori dan jenjang
-                pendidikan untuk mendukung proses belajar mengajar yang lebih
-                terarah.
+              <p className="mt-6 max-w-2xl text-base leading-relaxed text-emerald-50/90 md:text-lg font-normal">
+                Temukan modul pembelajaran PAI berdasarkan kategori dan jenjang pendidikan untuk mendukung proses belajar mengajar yang lebih terarah dan bermakna.
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3.5 sm:flex-row">
                 <a
                   href="#kategori"
-                  className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-950/20 transition hover:bg-emerald-500"
+                  className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-7 py-3.5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/30 transition-all duration-200 hover:bg-emerald-400 hover:shadow-emerald-500/50 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Jelajahi Kategori
                 </a>
                 <button
                   type="button"
                   onClick={() => navigate("/list-modul")}
-                  className="inline-flex items-center justify-center rounded-lg border border-white/25 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/15 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/25 hover:border-white/50 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Lihat Semua Modul
                 </button>
               </div>
             </div>
 
-            <div className="border border-white/20 bg-white/95 p-5 shadow-2xl shadow-slate-950/30 backdrop-blur-xl">
+            {/* Right Column: Dashboard Card Preview */}
+            <div className="rounded-2xl border border-white/40 bg-white/95 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-2xl transition-all">
               <div className="grid gap-4 sm:grid-cols-[1fr_0.75fr]">
-                <div className="rounded-lg bg-slate-950 p-6 text-white">
-                  <p className="text-sm font-semibold text-emerald-200">
-                    Ringkasan koleksi
+                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-900 to-teal-950 p-6 text-white shadow-lg transition-transform hover:scale-[1.01]">
+                  <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-emerald-400/20 blur-xl transition-all group-hover:bg-emerald-400/30" />
+                  <p className="text-xs font-bold uppercase tracking-wider text-emerald-300">
+                    Ringkasan Koleksi
                   </p>
-                  <p className="mt-4 text-5xl font-black">{latestModules.length}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">
+                  <p className="mt-3 text-4xl sm:text-5xl font-black tracking-tight text-white">{latestModules.length}</p>
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-emerald-100/80">
                     modul terbaru siap dijelajahi dan digunakan untuk bahan ajar.
                   </p>
                 </div>
 
                 <div className="grid gap-4">
-                  <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
-                    <p className="text-3xl font-black text-emerald-800">
+                  <div className="group rounded-xl border border-emerald-200 bg-emerald-50 p-4 transition-all hover:bg-emerald-100/80 hover:shadow-sm">
+                    <p className="text-2xl sm:text-3xl font-black text-emerald-800 tracking-tight">
                       {categories.length}
                     </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-600">
-                      Kategori
+                    <p className="mt-0.5 text-xs sm:text-sm font-bold text-emerald-900/80">
+                      Kategori Aktif
                     </p>
                   </div>
-                  <div className="rounded-lg border border-amber-100 bg-amber-50 p-4">
-                    <p className="text-3xl font-black text-amber-700">
+                  <div className="group rounded-xl border border-amber-200 bg-amber-50 p-4 transition-all hover:bg-amber-100/80 hover:shadow-sm">
+                    <p className="text-2xl sm:text-3xl font-black text-amber-800 tracking-tight">
                       {jenjang.length}
                     </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-600">
-                      Jenjang
+                    <p className="mt-0.5 text-xs sm:text-sm font-bold text-amber-900/80">
+                      Jenjang Pendidikan
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 rounded-lg border border-slate-200 bg-white p-5">
-                <p className="text-sm font-bold text-slate-950">
-                  Alur cepat pembelajaran
+              <div className="mt-4 rounded-xl border border-slate-200/80 bg-slate-50 p-4.5">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Alur Cepat Pembelajaran
                 </p>
-                <div className="mt-4 grid gap-3 text-sm text-slate-600">
+                <div className="mt-3 grid gap-2.5 text-xs sm:text-sm text-slate-700 font-medium">
                   <p className="flex items-center gap-3">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
                     Pilih kategori materi yang dibutuhkan.
                   </p>
                   <p className="flex items-center gap-3">
-                    <span className="h-2 w-2 rounded-full bg-amber-500" />
+                    <span className="h-2 w-2 rounded-full bg-amber-500 ring-4 ring-amber-500/20" />
                     Sesuaikan dengan jenjang pendidikan.
                   </p>
                   <p className="flex items-center gap-3">
-                    <span className="h-2 w-2 rounded-full bg-slate-500" />
+                    <span className="h-2 w-2 rounded-full bg-teal-500 ring-4 ring-teal-500/20" />
                     Gunakan modul terbaru atau ikut berkontribusi.
                   </p>
                 </div>
@@ -178,9 +192,14 @@ function App() {
               <button
                 type="button"
                 onClick={() => navigate("/contribute")}
-                className="mt-4 w-full rounded-lg bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-800"
+                className="mt-4 w-full group relative overflow-hidden rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-emerald-500 hover:shadow-lg active:scale-[0.99]"
               >
-                Bagikan Modul Ajar
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Bagikan Modul Ajar
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </span>
               </button>
             </div>
           </div>
@@ -279,14 +298,14 @@ function App() {
             <div className="mb-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {isLoadingJenjang
                 ? renderLoading("jenjang", 4)
-                : jenjang.map((item, index) => (
+                : jenjang.map((item) => (
                     <div
                       key={item.idJenjang || item.id || item.jenjang}
                       className="group relative rounded-xl border border-slate-200 bg-white p-2 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-300 hover:shadow-2xl hover:shadow-amber-950/10"
                     >
-                      <span className="absolute -top-3 left-5 z-10 rounded-full bg-slate-950 px-3 py-1 text-xs font-black text-white shadow-lg shadow-slate-950/15">
+                      {/* <span className="absolute -top-3 left-5 z-10 rounded-full bg-slate-950 px-3 py-1 text-xs font-black text-white shadow-lg shadow-slate-950/15">
                         {String(index + 1).padStart(2, "0")}
-                      </span>
+                      </span> */}
                       <div className="absolute inset-x-0 top-0 h-1 rounded-t-xl bg-gradient-to-r from-amber-400 via-emerald-500 to-slate-900 opacity-0 transition group-hover:opacity-100" />
                       <CardJenjang data={item} onClick={handleClickModul} />
                     </div>
