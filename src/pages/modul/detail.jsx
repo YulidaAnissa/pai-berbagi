@@ -69,32 +69,30 @@ export default function ModulDetailPage({ modul }) {
 
   // 2. Fungsi deteksi dan konversi URL (Support YouTube & TikTok)
   const getEmbedUrl = (url) => {
-    if (!url) return { url: null, type: null };
+  if (!url) return { url: null, type: null };
 
-    // Cek apakah URL YouTube
-    const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
-    const ytMatch = url.match(ytRegExp);
-    if (ytMatch && ytMatch[2].length === 11) {
-      return {
-        url: `https://www.youtube.com/embed/${ytMatch[2]}`,
-        type: "youtube",
-      };
-    }
+  // Cek YouTube
+  const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
+  const ytMatch = url.match(ytRegExp);
+  if (ytMatch && ytMatch[2].length === 11) {
+    return {
+      url: `https://www.youtube.com/embed/${ytMatch[2]}`,
+      type: "youtube",
+    };
+  }
 
-    // Cek apakah URL TikTok (Mengambil Video ID dari link tiktok.com/@user/video/ID)
-    const ttRegExp = /tiktok\.com\/.*\/video\/(\d+)/;
-    const ttMatch = url.match(ttRegExp);
-    if (ttMatch && ttMatch[1]) {
-      return {
-        url: `https://www.tiktok.com/player/v1/${ttMatch[1]}`,
-        type: "tiktok",
-      };
-    }
+  // Cek TikTok (Mendukung /video/ maupun /photo/)
+  const ttRegExp = /tiktok\.com\/.*\/(video|photo)\/(\d+)/;
+  const ttMatch = url.match(ttRegExp);
+  if (ttMatch && ttMatch[2]) {
+    return {
+      url: `https://www.tiktok.com/player/v1/${ttMatch[2]}`,
+      type: "tiktok",
+    };
+  }
 
-    // Jika format lain (misal langsung link embed atau lainnya)
-    return { url, type: "other" };
-  };
-
+  return { url, type: "other" };
+};
   const { url: previewUrl, type: previewType } = getEmbedUrl(rawPreviewUrl);
 
   const breadcrumbitems = [
@@ -240,16 +238,30 @@ export default function ModulDetailPage({ modul }) {
 
             <div className="relative aspect-video bg-slate-950 flex items-center justify-center">
               {previewUrl ? (
-                <iframe
-                  title={title}
-                  src={previewUrl}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className={`absolute inset-0 h-full w-full ${
-                    previewType === "tiktok" ? "max-w-sm mx-auto" : ""
-                  }`}
-                />
+                // previewType === "tiktok" ? (
+                //   <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white text-center">
+                //     <p className="mb-4">Konten TikTok ini berupa slide foto.</p>
+                //     <a 
+                //       href={rawPreviewUrl} 
+                //       target="_blank" 
+                //       rel="noreferrer"
+                //       className="bg-slate-800 hover:bg-slate-700 px-6 py-3 rounded-lg font-bold flex items-center gap-2"
+                //     >
+                //       <FaTiktok /> Lihat di TikTok
+                //     </a>
+                //   </div>
+                // ) : (
+                  <iframe
+                    title={title}
+                    src={previewUrl}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className={`absolute inset-0 h-full w-full ${
+                      previewType === "tiktok" ? "max-w-sm mx-auto" : ""
+                    }`}
+                  />
+                // )
               ) : (
                 <div className="grid h-full place-items-center px-6 text-center">
                   <div>
